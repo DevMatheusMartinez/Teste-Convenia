@@ -1,0 +1,14 @@
+web:
+  image: nginx:latest
+  ports:
+    - "80:80"
+  volumes:
+    - .:/code
+    - ./docker/files/nginx.conf:/etc/nginx/conf.d/default.conf
+  links:
+    - php-fpm
+php-fpm:
+  user: 1000:1000
+  image: php:7.4-fpm
+  volumes:
+    - .:/code
