@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EmployeeImport;
 use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
@@ -14,9 +16,11 @@ class EmployeeController extends Controller
         );
     }
 
-    public function store(): JsonResponse
+    public function store()
     {
+        Excel::import(new EmployeeImport, request()->file('file'));
         
+        return "teste";
     }
 
     public function show(Employee $employee): JsonResponse
