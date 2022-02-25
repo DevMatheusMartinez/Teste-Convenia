@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use App\GlobalScopes\LoggedUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new LoggedUser());
+    }
 
     /**
      * The attributes that are mass assignable.

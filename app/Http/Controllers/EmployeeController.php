@@ -19,6 +19,9 @@ class EmployeeController extends Controller
         );
     }
 
+     /**
+     * @return mixed
+     */
     public function store(EmployeeStore $request)
     {
         $validFile = ValidFiles::validFile($request->file);

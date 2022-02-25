@@ -52,7 +52,7 @@
                                                         <td align="center" style="margin: 0; padding: 0 0 40px;">
                                                             <h1
                                                                 style="line-height: 120%; font-family: Oswald, sans-serif; font-size: 28px; font-style: normal; font-weight: bold; color: #262626; margin: 0;">
-                                                                Novos colaboradores foram cadastrados!</h1>
+                                                                Colaboradores foram cadastrados ou atualizados!</h1>
                                                         </td>
                                                     </tr>
                                                     <tr>
