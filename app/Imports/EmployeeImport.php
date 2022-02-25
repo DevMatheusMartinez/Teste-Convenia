@@ -5,10 +5,14 @@ namespace App\Imports;
 use App\Models\Employee;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\Importable;
 
-class EmployeeImport implements ToModel, WithHeadingRow, WithValidation
+class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUpserts
 {
+    use Importable;
+
     /**
      * @param array $row
      *
@@ -25,6 +29,14 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation
             'start_date' => $row['start_date'],
             'user_id' => auth()->user()->id
         ]);
+    }
+
+    /**
+     * @return string|array
+     */
+    public function uniqueBy()
+    {
+        return 'email';
     }
 
     public function rules(): array
