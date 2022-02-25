@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Mailer
@@ -84,8 +83,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'd0b445a892-7703b7@inbox.mailtrap.io'),
+        'name' => env('MAIL_FROM_NAME', 'Name'),
     ],
 
     /*
@@ -106,5 +105,4 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
-
 ];

@@ -13,6 +13,8 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUps
 {
     use Importable;
 
+    public $numberRegistered = 0;
+
     /**
      * @param array $row
      *
@@ -20,6 +22,8 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUps
      */
     public function model(array $row)
     {
+
+        $this->numberRegistered++;
         return new Employee([
             'name' =>  $row['name'],
             'email' => $row['e_mail'],
@@ -29,6 +33,10 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUps
             'start_date' => $row['start_date'],
             'user_id' => auth()->user()->id
         ]);
+    }
+
+    public function numberRegistered(){
+        return $this->numberRegistered;
     }
 
     /**
