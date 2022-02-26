@@ -89,7 +89,7 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
             'name.max' => ':attribute deve ter no maximo 25 caracteres.',
             'name.min' => ':attribute deve ter no minimo 4 caracteres.',
             'e_mail.required' => $required,
-            'e_mail.string' => $string,
+            'e_mail.email' => ":attribute deve ser um email válido",
             'document.required' => $required,
             'document.numeric' => ":attribute deve ser um numero",
             'city.required' => $required,
@@ -97,14 +97,9 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
             'state.required' => $required,
             'state.string' => $string,
             'start_date.required' => $required,
-            'start_date.string' => $string,
+            'start_date.date' => ":attribute deve ser uma data válida",
             'start_date.before_or_equal' => ":attribute tem uma data maior que a de hoje"
         ];
-    }
-
-    public function customValidationAttributes()
-    {
-        return ['e_email' => 'e-mail'];
     }
 
     /**
@@ -114,8 +109,6 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
     {
         $this->allRowsCount++;
         $this->rowsFailedCount++;
-
-        dd($failures);
 
         $this->failures = array_merge($this->failures, $failures);
     }
