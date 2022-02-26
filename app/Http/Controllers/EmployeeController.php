@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Functions\ConfigurationCSV;
+use App\Functions\Teste;
 use App\Functions\ErrorHandling;
 use App\Http\Requests\EmployeeStore;
 use App\Imports\EmployeeImport;
@@ -26,6 +28,7 @@ class EmployeeController extends Controller
     public function store(EmployeeStore $request)
     {
         try {
+            ConfigurationCSV::setEnconding($request->file);
             $import = new EmployeeImport();
             $import->import($request->file, null, \Maatwebsite\Excel\Excel::CSV);
             $importReport = $import->getImportReport();

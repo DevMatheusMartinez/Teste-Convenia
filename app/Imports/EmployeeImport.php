@@ -3,9 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Employee;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
@@ -116,6 +114,8 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
     {
         $this->allRowsCount++;
         $this->rowsFailedCount++;
+
+        dd($failures);
 
         $this->failures = array_merge($this->failures, $failures);
     }
