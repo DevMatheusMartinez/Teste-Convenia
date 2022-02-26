@@ -8,12 +8,14 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\RemembersRowNumber;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
 
-class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUpserts, SkipsOnFailure
+class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure
 {
     use Importable, SkipsFailures, RemembersRowNumber;
 
@@ -26,17 +28,17 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUps
      */
     protected $failures = [];
 
-    /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function model(array $row)
+    public function onRow(Row $row)
     {
         $this->allRowsCount++;
-        $model = new Employee([
-            'name' =>  $row['name'],
+        $getIndex = $row->getIndex();
+        $row = $row->toArray();
+
+        $model = Employee::updateOrCreate([
             'email' => $row['e_mail'],
+            'user_id' => auth()->user()->id
+        ], [
+            'name' =>  $row['name'],
             'document' => $row['document'],
             'city' => $row['city'],
             'state' => $row['state'],
@@ -47,7 +49,7 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUps
         $this->modelArray = $model->toArray();
 
         $this->rowsSuccessCount++;
-        array_push($this->rowsSuccess, "Linha {$this->getRowNumber()} inserida com successo");
+        array_push($this->rowsSuccess, "Linha {$getIndex} inserida com successo");
 
         return $model;
     }
@@ -72,7 +74,7 @@ class EmployeeImport implements ToModel, WithHeadingRow, WithValidation, WithUps
             'document' => ['required', 'numeric'],
             'city' => ['required', 'string'],
             'state' => ['required', 'string'],
-            'start_date' => ['required', 'date', 'before_or_equal:'.date('Y-m-d')]
+            'start_date' => ['required', 'date', 'before_or_equal:' . date('Y-m-d')]
         ];
     }
 
