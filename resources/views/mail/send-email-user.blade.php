@@ -66,15 +66,52 @@
                                                     <tr>
                                                         <td align="left" class="es-p20b">
                                                             <p style="font-size: 20px; margin-top:20px">
-                                                                <span style="color:black">Data de Cadastro:
-                                                                    {{ $dateRegistration }} <span>
+                                                                <span style="color:black">Data desta atualização:
+                                                                    {{ $importReport['importDate'] }}
+                                                                    <span>
+                                                            </p>
+                                                            <p style="font-size: 20px; margin-top:20px">
+                                                                <span style="color:black">Horario desta atualização:
+                                                                    {{ $importReport['importTime'] }}
+                                                                    <span>
                                                             </p>
                                                             <p style="font-size: 20px;">
                                                                 <span style="font-size: 20px; color: black">
-                                                                    Numero de linhas cadastradas:
-                                                                    {{ $numberRegistered }}</span>
+                                                                    Total de linhas do arquivo CSV:
+                                                                    {{ $importReport['allRowsCount'] }}</span>
                                                             </p>
-                                                            <p style="font-size: 20px;"
+                                                            <p style="font-size: 20px;">
+                                                                <span style="font-size: 20px; color: black">
+                                                                    Numero de linhas inseridas com sucesso:
+                                                                    {{ $importReport['rowsSuccessCount'] }}</span>
+                                                            </p>
+                                                            <p style="font-size: 20px;">
+                                                                <span style="font-size: 20px; color: black">
+                                                                    Numero de linhas não inseridas devido falha:
+                                                                    {{ $errorsReport['rowsFailedCount'] }}</span>
+                                                            </p>
+                                                            <p style="font-size: 20px;">
+                                                                <span style="font-size: 20px; color: black">
+                                                                    Linhas inseridas: </span>
+                                                            </p>
+
+                                                            @foreach ($importReport['rowsSuccess'] as $row)
+                                                                <span>{{ $row }}</span><br>
+                                                            @endforeach
+
+                                                            <p style="font-size: 20px;">
+                                                                <span style="font-size: 20px; color: black">
+                                                                    Errors encontrados: </span>
+                                                            </p>
+
+                                                            @foreach ($errorsReport['errors'] as $row)
+                                                                <span>{{ $row }}</span><br>
+                                                            @endforeach
+
+
+                                                            <p style="font-size: 20px;" </table>
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             </td>
                                         </tr>
@@ -82,39 +119,45 @@
                                 </td>
                             </tr>
                         </table>
-                    </td>
-                </tr>
-            </table>
-            <table cellpadding="0" cellspacing="0" align="center"
-                style="border-collapse: collapse; border-spacing: 0px; table-layout: fixed; width: 100%;">
-                <tr>
-                    <td align="center" bgcolor="#1b2a2f" style="margin: 0; padding: 0;">
-                        <table bgcolor="#1b2a2f" align="center" cellpadding="0" cellspacing="0" width="600"
-                            style="border-collapse: collapse; border-spacing: 0px;">
+                        <table cellpadding="0" cellspacing="0" align="center"
+                            style="border-collapse: collapse; border-spacing: 0px; table-layout: fixed; width: 100%;">
                             <tr>
-                                <td align="left" style="margin: 0; padding: 20px 10px;">
-                                    <table cellpadding="0" cellspacing="0" width="100%"
+                                <td align="center" bgcolor="#1b2a2f" style="margin: 0; padding: 0;">
+                                    <table bgcolor="#1b2a2f" align="center" cellpadding="0" cellspacing="0" width="600"
                                         style="border-collapse: collapse; border-spacing: 0px;">
                                         <tr>
-                                            <td width="580" align="center" valign="top" style="margin: 0; padding: 0;">
-                                                <table cellpadding="0" cellspacing="0" width="100%" role="presentation"
+                                            <td align="left" style="margin: 0; padding: 20px 10px;">
+                                                <table cellpadding="0" cellspacing="0" width="100%"
                                                     style="border-collapse: collapse; border-spacing: 0px;">
                                                     <tr>
-                                                        <td align="center"
-                                                            style="line-height: 120%; font-size: 16px; color: #FFFFFF; margin: 0; padding: 0;">
-                                                            <h1
-                                                                style="color: #ffffff; line-height: 120%; font-family: Oswald, sans-serif; font-size: 28px; font-style: normal; font-weight: bold; margin: 0;"></h1>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center"
-                                                            style="line-height: 120%; font-size: 16px; color: #FFFFFF; margin: 0; padding: 20px 0;">
-                                                            <p
-                                                                style='font-family: "Open Sans", sans-serif; line-height: 120%; color: #FFFFFF; font-size: 16px; margin: 0;'></p>
-                                                            <p
-                                                                style='font-family: "Open Sans", sans-serif; line-height: 120%; color: #FFFFFF; font-size: 16px; margin: 0;'></p>
-                                                            <p
-                                                                style='font-family: "Open Sans", sans-serif; line-height: 120%; color: #FFFFFF; font-size: 16px; margin: 0;'></p>
+                                                        <td width="580" align="center" valign="top"
+                                                            style="margin: 0; padding: 0;">
+                                                            <table cellpadding="0" cellspacing="0" width="100%"
+                                                                role="presentation"
+                                                                style="border-collapse: collapse; border-spacing: 0px;">
+                                                                <tr>
+                                                                    <td align="center"
+                                                                        style="line-height: 120%; font-size: 16px; color: #FFFFFF; margin: 0; padding: 0;">
+                                                                        <h1
+                                                                            style="color: #ffffff; line-height: 120%; font-family: Oswald, sans-serif; font-size: 28px; font-style: normal; font-weight: bold; margin: 0;">
+                                                                        </h1>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="center"
+                                                                        style="line-height: 120%; font-size: 16px; color: #FFFFFF; margin: 0; padding: 20px 0;">
+                                                                        <p
+                                                                            style='font-family: "Open Sans", sans-serif; line-height: 120%; color: #FFFFFF; font-size: 16px; margin: 0;'>
+                                                                        </p>
+                                                                        <p
+                                                                            style='font-family: "Open Sans", sans-serif; line-height: 120%; color: #FFFFFF; font-size: 16px; margin: 0;'>
+                                                                        </p>
+                                                                        <p
+                                                                            style='font-family: "Open Sans", sans-serif; line-height: 120%; color: #FFFFFF; font-size: 16px; margin: 0;'>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -127,6 +170,3 @@
                     </td>
                 </tr>
             </table>
-        </td>
-    </tr>
-</table>

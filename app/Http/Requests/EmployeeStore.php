@@ -9,7 +9,7 @@ class EmployeeStore extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['required', 'file'],
+            'file' => ['required', 'file', 'mimetypes:text/plain,text/csv'],  
         ];
     }
 }

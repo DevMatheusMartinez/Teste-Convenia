@@ -12,16 +12,18 @@ class SendMailUser extends Mailable
     use Queueable, SerializesModels;
 
     private object $user;
-    private int $numberRegistered;
+    private array $importReport;
+    private array $errorsReport;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(object $user, int $numberRegistered)
+    public function __construct(object $user, array $importReport, array $errorsReport )
     {
         $this->user = $user;
-        $this->numberRegistered = $numberRegistered;
+        $this->importReport = $importReport;
+        $this->errorsReport = $errorsReport;
     }
 
     /**
@@ -35,8 +37,8 @@ class SendMailUser extends Mailable
         return $this->view('mail.send-email-user',
         [
             'user' => $this->user,
-            'numberRegistered' => $this->numberRegistered,
-            'dateRegistration' => date("d/m/Y")
+            'importReport' => $this->importReport,
+            'errorsReport' => $this->errorsReport
         ]);
     }
 }
