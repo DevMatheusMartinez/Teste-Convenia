@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class EmployeeStoreTest extends TestCase
 {
-    public function testIfTheEmployeeStoreRulesAreTheSameAsExpected()
+    public function testIfTheEmployeeStoreRulesAreTheSameAsExpected():void
     {
         $request = new EmployeeStore();
 
