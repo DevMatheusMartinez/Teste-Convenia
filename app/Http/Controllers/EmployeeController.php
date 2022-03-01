@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeeStore;
-use App\Imports\EmployeeImport;
-use App\Mail\SendMailUser;
+use App\Jobs\EmployeerImportJob;
 use App\Models\Employee;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -21,20 +18,10 @@ class EmployeeController extends Controller
 
     public function store(EmployeeStore $request): JsonResponse
     {
-        try {
-            $import = new EmployeeImport();
-            $import->import($request->file, null, Excel::CSV);
-            $importReport = $import->getImportReport();
-            $errorsReport = $import->getErrorsReport();
-            $userLogged = auth()->user();
-        } catch (Exception $e) {
-            return response()->json("NOT ACCEPTABLE: {$e->getMessage()}", 406);
-        }
+       $path = Storage::putFile("import", $request->file);
+       EmployeerImportJob::dispatch($path)->onQueue('employees');
 
-        $post = new SendMailUser($userLogged, $importReport, $errorsReport);
-        Mail::to($userLogged->email)->send($post);
-        
-        return response()->json(["report" => array_merge($importReport, $errorsReport)], 200);
+       return response()->json("teste");
     }
 
     public function show(Employee $employee): JsonResponse
