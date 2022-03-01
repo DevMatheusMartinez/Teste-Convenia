@@ -31,8 +31,6 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
         $rowNumber = $row->getIndex();
         $row = $row->toArray();
 
-        dd($row);
-
         $employee = Employee::updateOrCreate([
             'email' => $row['e_mail'],
             'user_id' => auth()->user()->id
@@ -81,6 +79,7 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
     {
         $required = ':attribute é obrigátorio.';
         $string =  ':attribute deve ser uma string.';
+
         return [
             'name.required' => $required,
             'name.string' => $string,
@@ -111,8 +110,20 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
         $this->failures = array_merge($this->failures, $failures);
     }
 
-    public function getRowsFailedCount():int
+    public function getErrorsReport(): array
     {
-        return $this->rowsFailedCount;
+        $errorsReport = [
+            "rowsFailedCount" => $this->rowsFailedCount,
+            "errors" => []
+        ];
+
+        foreach ($this->failures as $failure) {
+            array_push(
+                $errorsReport["errors"],
+                "Linha {$failure->row()} {$failure->errors()[0]}"
+            );
+        }
+
+        return $errorsReport;
     }
 }

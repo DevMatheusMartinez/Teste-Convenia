@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Functions\ErrorHandling;
 use App\Http\Requests\EmployeeStore;
 use App\Imports\EmployeeImport;
 use App\Mail\SendMailUser;
@@ -20,16 +19,13 @@ class EmployeeController extends Controller
         return response()->json(Employee::get());
     }
 
-    /**
-     * @return mixed
-     */
-    public function store(EmployeeStore $request)
+    public function store(EmployeeStore $request): JsonResponse
     {
         try {
             $import = new EmployeeImport();
             $import->import($request->file, null, Excel::CSV);
             $importReport = $import->getImportReport();
-            $errorsReport = ErrorHandling::getErrorsReport($import->failures(), $import->getRowsFailedCount());
+            $errorsReport = $import->getErrorsReport();
             $userLogged = auth()->user();
         } catch (Exception $e) {
             return response()->json("NOT ACCEPTABLE: {$e->getMessage()}", 406);
