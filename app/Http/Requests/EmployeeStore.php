@@ -12,4 +12,13 @@ class EmployeeStore extends FormRequest
             'file' => ['required', 'file', 'mimetypes:text/plain,text/csv'],  
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'file.required' => "Nenhum arquivo foi selecionado",
+            'file.file' => "O campo file deve ser um arquivo",
+            'file.mimetypes' => "O tipo de arquivo deve ser CSV"
+        ];
+    }
 }

@@ -7,7 +7,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\RemembersRowNumber;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Row;
@@ -15,7 +14,7 @@ use Maatwebsite\Excel\Validators\Failure;
 
 class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure
 {
-    use Importable, SkipsFailures, RemembersRowNumber;
+    use Importable, SkipsFailures;
 
     private $allRowsCount = 0;
     private $rowsSuccessCount = 0;
@@ -29,10 +28,12 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
     public function onRow(Row $row)
     {
         $this->allRowsCount++;
-        $getIndex = $row->getIndex();
+        $rowNumber = $row->getIndex();
         $row = $row->toArray();
 
-        $model = Employee::updateOrCreate([
+        dd($row);
+
+        $employee = Employee::updateOrCreate([
             'email' => $row['e_mail'],
             'user_id' => auth()->user()->id
         ], [
@@ -41,15 +42,12 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
             'city' => $row['city'],
             'state' => $row['state'],
             'start_date' => $row['start_date'],
-            'user_id' => auth()->user()->id
         ]);
 
-        $this->modelArray = $model->toArray();
-
         $this->rowsSuccessCount++;
-        array_push($this->rowsSuccess, "Linha {$getIndex} inserida com successo");
+        array_push($this->rowsSuccess, "Linha {$rowNumber} inserida com successo");
 
-        return $model;
+        return $employee;
     }
 
     public function getImportReport(): array
@@ -113,7 +111,7 @@ class EmployeeImport implements OnEachRow, WithHeadingRow, WithValidation, Skips
         $this->failures = array_merge($this->failures, $failures);
     }
 
-    public function getRowsFailedCount()
+    public function getRowsFailedCount():int
     {
         return $this->rowsFailedCount;
     }

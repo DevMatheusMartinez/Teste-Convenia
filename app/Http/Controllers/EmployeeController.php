@@ -9,15 +9,15 @@ use App\Mail\SendMailUser;
 use App\Models\Employee;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Excel;
 
 class EmployeeController extends Controller
 {
     public function get(): JsonResponse
     {
-        return response()->json(
-            Employee::get()
-        );
+        return response()->json(Employee::get());
     }
 
     /**
@@ -27,7 +27,7 @@ class EmployeeController extends Controller
     {
         try {
             $import = new EmployeeImport();
-            $import->import($request->file, null, \Maatwebsite\Excel\Excel::CSV);
+            $import->import($request->file, null, Excel::CSV);
             $importReport = $import->getImportReport();
             $errorsReport = ErrorHandling::getErrorsReport($import->failures(), $import->getRowsFailedCount());
             $userLogged = auth()->user();
@@ -37,20 +37,19 @@ class EmployeeController extends Controller
 
         $post = new SendMailUser($userLogged, $importReport, $errorsReport);
         Mail::to($userLogged->email)->send($post);
+        
         return response()->json(["report" => array_merge($importReport, $errorsReport)], 200);
     }
 
     public function show(Employee $employee): JsonResponse
     {
-        return response()->json(
-            $employee
-        );
+        return response()->json($employee);
     }
 
-    public function destroy(Employee $employee): JsonResponse
+    public function destroy(Employee $employee): Response
     {
-        return response()->json([
-            'Success' => $employee->delete()
-        ]);
+        $employee->delete();
+
+        return response()->noContent();
     }
 }

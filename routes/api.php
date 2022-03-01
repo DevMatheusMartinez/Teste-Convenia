@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/employees/{employee}', [EmployeeController::class, 'show'])
         ->name('employees.show');
 
-    Route::post('/employees', [EmployeeController::class, 'store']);
+    Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 
     Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])
         ->name('employees.destroy');

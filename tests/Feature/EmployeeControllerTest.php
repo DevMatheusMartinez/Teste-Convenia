@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Laravel\Passport\Passport;
+use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
 class EmployeeControllerTest extends TestCase
@@ -105,10 +107,7 @@ class EmployeeControllerTest extends TestCase
         ]);
 
         $this->delete(route('employees.destroy', [$employee->id]),)
-            ->assertOk()
-            ->assertExactJson([
-                'Success' => true
-            ]);
+            ->assertNoContent();
 
         $this->assertDatabaseMissing('employees', [
             'id' => $employee->id
@@ -136,5 +135,33 @@ class EmployeeControllerTest extends TestCase
             'id' => $employee->id,
             'user_id' => $user->id
         ]);
+    }
+
+    public function test_it_registers_employees_with_an_authentication_user()
+    {
+        $file = UploadedFile::fake()->create('fakeExcel.csv');
+
+        Excel::fake();
+
+        $this->post(route('employees.store'), [
+            'file' => $file
+        ])->assertOk();
+
+        Excel::assertImported('fakeExcel.csv');
+    }
+
+    public function test_registers_employees_without_file_should_throw_error_with_an_authentication_user()
+    {
+        $this->withHeaders(['Accept' => 'application/json'])
+            ->post(route('employees.store'))
+            ->assertStatus(422)
+            ->assertJson([
+                "message" => "The given data was invalid.",
+                "errors" => [
+                    "file" => [
+                        "Nenhum arquivo foi selecionado"
+                    ]
+                ]
+            ]);
     }
 }
